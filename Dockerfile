@@ -1,12 +1,9 @@
-FROM jfloff/alpine-python:3.4
+FROM alpine:latest
 
 ENV REGISTRY_DATA_DIR=/registry
 
-RUN apk add --update curl \
-    && rm /var/cache/apk/*
+RUN apk --no-cache add python3
 
-RUN curl https://raw.githubusercontent.com/burnettk/delete-docker-registry-image/master/delete_docker_registry_image.py | \
-    tee /usr/local/bin/delete_docker_registry_image >/dev/null && \
-    chmod +x /usr/local/bin/delete_docker_registry_image
+ADD https://raw.githubusercontent.com/burnettk/delete-docker-registry-image/master/delete_docker_registry_image.py /usr/local/bin/delete_docker_registry_image
 
-ENTRYPOINT ["/usr/local/bin/delete_docker_registry_image", "--verbose", "--image"]
+ENTRYPOINT ["python3", "/usr/local/bin/delete_docker_registry_image", "--verbose", "--image"]
